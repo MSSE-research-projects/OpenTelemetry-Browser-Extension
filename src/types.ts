@@ -43,6 +43,9 @@ export interface InstrumentationConfiguration {
     [InstrumentationType.XML_HTTP_REQUEST]: {
       enabled: boolean;
     };
+    [InstrumentationType.USER_INTERACTION]: {
+      enabled: boolean;
+    };
   };
   withZoneContextManager: boolean;
 }
@@ -124,6 +127,7 @@ export enum InstrumentationType {
   DOCUMENT_LOAD = 'DocumentLoad',
   FETCH = 'Fetch',
   XML_HTTP_REQUEST = 'XMLHttpRequest',
+  USER_INTERACTION = 'UserInteraction',
 }
 
 export enum DomElements {

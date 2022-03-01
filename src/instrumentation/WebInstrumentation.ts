@@ -32,6 +32,7 @@ import {
   InstrumentationConfiguration,
   InstrumentationType,
 } from '../types';
+import { UserInteractionInstrumentation } from '@opentelemetry/instrumentation-user-interaction';
 
 export class WebInstrumentation {
   withZoneContextManager: boolean;
@@ -41,6 +42,7 @@ export class WebInstrumentation {
     [InstrumentationType.DOCUMENT_LOAD]: { enabled: boolean };
     [InstrumentationType.FETCH]: { enabled: boolean };
     [InstrumentationType.XML_HTTP_REQUEST]: { enabled: boolean };
+    [InstrumentationType.USER_INTERACTION]: { enabled: boolean };
   };
   constructor(
     config: InstrumentationConfiguration,
@@ -93,6 +95,14 @@ export class WebInstrumentation {
 
     if (this.instrumentations[InstrumentationType.XML_HTTP_REQUEST].enabled) {
       instrumentations.push(new XMLHttpRequestInstrumentation());
+    }
+
+    if (this.instrumentations[InstrumentationType.USER_INTERACTION].enabled) {
+      instrumentations.push(
+        new UserInteractionInstrumentation({
+          eventNames: ['click'],
+        })
+      );
     }
 
     registerInstrumentations({

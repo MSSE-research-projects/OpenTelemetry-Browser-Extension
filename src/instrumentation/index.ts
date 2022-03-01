@@ -35,13 +35,13 @@ new WebInstrumentation(
     exporters,
     instrumentations: {
       [InstrumentationType.DOCUMENT_LOAD]: {
-        enabled: true,
+        enabled: false,
       },
       [InstrumentationType.FETCH]: {
-        enabled: true,
+        enabled: false,
       },
       [InstrumentationType.XML_HTTP_REQUEST]: {
-        enabled: true,
+        enabled: false,
       },
     },
     withZoneContextManager: true,

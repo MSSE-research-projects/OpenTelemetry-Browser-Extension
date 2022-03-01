@@ -77,6 +77,9 @@ describe('WebInstrumentation', () => {
           [InstrumentationType.XML_HTTP_REQUEST]: {
             enabled: true,
           },
+          [InstrumentationType.USER_INTERACTION]: {
+            enabled: false,
+          },
         },
         withZoneContextManager: true,
       },
