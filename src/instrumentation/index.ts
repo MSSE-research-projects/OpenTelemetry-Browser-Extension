@@ -43,6 +43,9 @@ new WebInstrumentation(
       [InstrumentationType.XML_HTTP_REQUEST]: {
         enabled: false,
       },
+      [InstrumentationType.USER_INTERACTION]: {
+        enabled: true,
+      },
     },
     withZoneContextManager: true,
   },
