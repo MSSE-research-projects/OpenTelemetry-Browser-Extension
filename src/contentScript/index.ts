@@ -13,7 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 import { InstrumentationInjector } from './InstrumentationInjector';
+import ExperimentManager from './ExperimentManager';
+import { WebSiteSettings } from '../types';
+
+chrome.runtime.onMessage.addListener((message: { action: string, settings: WebSiteSettings }) => {
+  if (message.action == "pullSetting") {
+    new ExperimentManager(message.settings).launch();
+  }
+  return true;
+});
 
 new InstrumentationInjector(chrome, document, console).execute();

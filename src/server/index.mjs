@@ -1,9 +1,10 @@
 import express from 'express'
 import cors from 'cors'
 
+import stackoverflowSettings from './taskSettings/stackoverflow.mjs';
 const app = express();
 
-app.use(cors())
+app.use('*', cors())
 app.use(express.text({ limit: '200mb' }))
 let dom;
 //app.use(express.urlencoded({ extended: true }))
@@ -15,63 +16,33 @@ const page2baseTimestamp = {};
 
 let nxtRecordingStatus = 'begin';
 
-app.post('/switch-recording', (req, res) => {
-  if (nxtRecordingStatus == 'begin') {
-    
-  } else {
-  }
-})
-
 app.post('/task-start', (req, res) => {
-  console.log("Begin Task")
-  beginTimestamp = Date.now()
-  report = { click: 0, scroll: 0, pause: 0, pause_duration: 0 }
-  res.sendStatus(200)
-  nxtRecordingStatus = 'end'
+  console.log("Begin Task");
+  beginTimestamp = Date.now();
+  report = { click: 0, scroll: 0, pause: 0, pause_duration: 0 };
+  res.sendStatus(200);
+  nxtRecordingStatus = 'end';
 })
 
 app.post('/task-end', (req, res) => {
-  console.log("End Task")
+  console.log("End Task");
   report.taskBegin = new Date(beginTimestamp);
   report.taskEnd = new Date();
-  console.log(report)
-  res.sendStatus(200)
+  res.sendStatus(200);
   nxtRecordingStatus = 'begin'
 });
 
+const domain2settings = {
+  "stackoverflow.com": stackoverflowSettings,
+}
+
 app.get('/settings', (req, res) => {
-  const stackoverSettings = [
-    {
-      taskTitle: 'Fill in Availability (StackOverflow)',
-      scenario: 'You are a healthy volunteer with no medical conditions who wants to help with some existing requests.',
-      taskDesc: 'Use the app to provide the time slots that you\'re available for volunteering.',
-    },
-    {
-      taskTitle: 'Fill in Availability (StackOverflow)',
-      scenario: 'You are a healthy volunteer with no medical conditions who wants to help with some existing requests.',
-      taskDesc: 'Use the app to provide the time slots that you\'re available for volunteering.',
-    }
-  ];
-
-  const msftSettings = [
-    {
-      taskTitle: 'Fill in Availability (Microsoft)',
-      scenario: 'You are a healthy volunteer with no medical conditions who wants to help with some existing requests.',
-      taskDesc: 'Use the app to provide the time slots that you\'re available for volunteering.',
-    },
-    {
-      taskTitle: 'Fill in Availability (Microsoft)',
-      scenario: 'You are a healthy volunteer with no medical conditions who wants to help with some existing requests.',
-      taskDesc: 'Use the app to provide the time slots that you\'re available for volunteering.',
-    }
-  ];1
-
-  if (req.query.domain === 'stackoverflow.com') {
-    res.json({ settings: stackoverSettings });
-  } else if (req.query.domain === 'docs.microsoft.com') {
-    res.json({ settings: msftSettings })
+  if (req.query.domain in domain2settings) {
+    const settings = domain2settings[req.query.domain];
+    return res.json(settings);
   }
 
+  res.sendStatus(404);
 })
  
 
@@ -117,7 +88,7 @@ app.post('/', (req, res) => {
     const elementIdx = parseInt(event.pointer[0].data.target)
     console.log(dom[elementIdx])
   }
-  
+
   res.sendStatus(200)
 })
 

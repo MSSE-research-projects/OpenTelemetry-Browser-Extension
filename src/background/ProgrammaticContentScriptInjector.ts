@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { TabStatus, CONTENT_SCRIPT_NAME } from '../types';
+import { TabStatus, CONTENT_SCRIPT_NAME, REMOTE_SERVER_PORT, REMOTE_SERVER_URL } from '../types';
 
 export class ProgrammaticContentScriptInjector {
   scope: typeof chrome;
@@ -44,11 +44,29 @@ export class ProgrammaticContentScriptInjector {
     });
   }
 
+  sendSetting(tabId: number, url: URL) {
+    const domain = url.hostname;
+
+    fetch(`http://${REMOTE_SERVER_URL}:${REMOTE_SERVER_PORT}/settings?domain=${domain}`,
+      { headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' } }).then((res) => {
+        res.json().then((settings) => {
+          this.scope.tabs.sendMessage(tabId, { action: "pullSetting", settings });
+        })
+      });
+  }
+
   register() {
     this.scope.tabs.onUpdated.addListener(
       (tabId: number, changeInfo: chrome.tabs.TabChangeInfo) => {
         if (changeInfo.status === TabStatus.LOADING) {
           this.injectContentScript(tabId);
+        }
+
+        if (changeInfo.status === TabStatus.COMPLETE) {
+          this.scope.tabs.query({active: true, lastFocusedWindow: true}, tabs => {
+              const urlAddr = tabs[0].url;
+              this.sendSetting(tabId, new URL(urlAddr || ''));
+          });
         }
       }
     );

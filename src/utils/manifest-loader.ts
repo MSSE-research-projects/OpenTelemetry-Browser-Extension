@@ -80,6 +80,12 @@ export default function (this: WebpackLoaderContext, source: string): string {
       manifest_version: options.manifestVersion,
       version: p.version,
       background,
+      content_scripts: [
+        {
+          "matches": ["http://*/*", "https://*/*"],
+          "css": ["lightbox.css"]
+        }
+      ],
       web_accessible_resources,
       description: p.description,
       name: capitalCase(p.name),
