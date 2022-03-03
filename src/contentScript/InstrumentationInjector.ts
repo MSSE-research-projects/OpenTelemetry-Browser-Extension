@@ -62,12 +62,12 @@ export class InstrumentationInjector {
 
       if (taskSettings) {
         this.logger.log(
-          `[otel-extension] retmoe task settings includes ${domain}`
+          `[otel-extension] remote task settings includes ${domain}`
         );
         this.inject(settings);
       } else {
         this.logger.log(
-          `[otel-extension] retmoe task settings does not include ${domain}`
+          `[otel-extension] remote task settings does not include ${domain}`
         );
       }
     });
