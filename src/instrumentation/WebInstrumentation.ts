@@ -33,6 +33,7 @@ import {
   InstrumentationType,
 } from '../types';
 import { UserInteractionInstrumentation } from '@opentelemetry/instrumentation-user-interaction';
+import {RuntimeErrorInstrumentation} from "./custom/error/instrumentation";
 
 export class WebInstrumentation {
   withZoneContextManager: boolean;
@@ -100,10 +101,17 @@ export class WebInstrumentation {
     if (this.instrumentations[InstrumentationType.USER_INTERACTION].enabled) {
       instrumentations.push(
         new UserInteractionInstrumentation({
-          eventNames: ['click'],
+          eventNames: [
+            'click',
+
+            // patch HTML element level error
+            'error',
+          ],
         })
       );
     }
+
+    instrumentations.push(new RuntimeErrorInstrumentation())
 
     registerInstrumentations({
       instrumentations,
