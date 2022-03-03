@@ -81,6 +81,14 @@ module.exports = (env: { MV?: string; WEBPACK_BUILD: boolean }) => {
             },
           ],
         },
+        {
+          test: /\.(css)$/i,
+          use: [
+            {
+              loader: 'css-loader',
+            },
+          ],
+        },
       ],
     },
     plugins: [

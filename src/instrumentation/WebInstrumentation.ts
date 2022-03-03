@@ -97,13 +97,11 @@ export class WebInstrumentation {
       instrumentations.push(new XMLHttpRequestInstrumentation());
     }
 
-    if (this.instrumentations[InstrumentationType.USER_INTERACTION].enabled) {
-      instrumentations.push(
-        new UserInteractionInstrumentation({
-          eventNames: ['click'],
-        })
-      );
-    }
+    instrumentations.push(
+      new UserInteractionInstrumentation({
+        eventNames: ['click'],
+      })
+    );
 
     registerInstrumentations({
       instrumentations,

@@ -18,6 +18,8 @@ import {
   DomAttributes,
   DomElements,
   INSTRUMENTATION_SCRIPT_NAME,
+  REMOTE_SERVER_PORT,
+  REMOTE_SERVER_URL,
   Settings,
 } from '../types';
 
@@ -51,22 +53,21 @@ export class InstrumentationInjector {
   }
 
   execute() {
-    this.scope.storage.local.get('settings', ({ settings }) => {
-      // Define label of badge.
-      const urlFilter = settings.urlFilter;
-      if (
-        InstrumentationInjector.checkUrlFilter(
-          urlFilter,
-          this.doc.location.href
-        )
-      ) {
+    this.scope.storage.local.get('settings', async ({ settings }) => {
+      const domain = new URL(this.doc.location.href).hostname;
+
+      const res = await fetch(`http://${REMOTE_SERVER_URL}:${REMOTE_SERVER_PORT}/settings?domain=${domain}`,
+        { headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' } })
+      const { settings: taskSettings } = await res.json();
+
+      if (taskSettings) {
         this.logger.log(
-          `[otel-extension] ${this.doc.location.href} includes ${urlFilter}`
+          `[otel-extension] remote task settings includes ${domain}`
         );
         this.inject(settings);
       } else {
         this.logger.log(
-          `[otel-extension] ${this.doc.location.href} does not include ${urlFilter}`
+          `[otel-extension] remote task settings does not include ${domain}`
         );
       }
     });

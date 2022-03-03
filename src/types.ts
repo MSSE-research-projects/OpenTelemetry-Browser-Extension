@@ -154,5 +154,44 @@ export enum TabStatus {
   COMPLETE = 'complete',
 }
 
+export const REMOTE_SERVER_URL = 'localhost';
+export const REMOTE_SERVER_PORT = '80';
+
 export const CONTENT_SCRIPT_NAME = 'contentScript.js';
 export const INSTRUMENTATION_SCRIPT_NAME = 'instrumentation.js';
+
+
+export interface WebSiteSettings {
+  intro: Intro,
+  tasks: Task[],
+  preSurvey: PreSurvey,
+  postSurvey: PostSurvey,
+};
+
+export interface SurveyQuestion {
+  description: string,
+  isRequired: boolean,
+  options: string[],
+  type: string,
+};
+
+export interface Intro {
+  title: string,
+  description: string,
+};
+
+export interface PostSurvey {
+  title: string,
+  questions: SurveyQuestion[],
+};
+
+export interface PreSurvey {
+  title: string,
+  questions: SurveyQuestion[],
+};
+
+export interface Task {
+  taskTitle: string,
+  scenario: string,
+  taskDesc: string
+};
